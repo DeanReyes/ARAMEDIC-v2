@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="/styles-registro.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <div class="header-text">
+        <h1><span class="highlight">ARA</span>MEDIC</h1>
+    </div>
+    
+    <div class="container">
+        <div class="title">Registrar cuenta</div>
+        
+        <!-- Mostrar errores si existen -->
+        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+            <div class="error-box">
+                <ul class="error-list">
+                    <% errors.forEach(function(error) { %>
+                        <li><%= error.msg %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+
+        <form action="/registroU" method="POST">
+            <div class="user-details">
+                <div class="input-box">
+                    <span class="details">Nombre</span>
+                    <input type="text" name="nom" placeholder="Introduce tus nombres" value="<%= oldData ? oldData.nom : '' %>">
+                </div>
+                <div class="input-box">
+                    <span class="details">Apellido</span>
+                    <input type="text" name="ape" placeholder="Introduce tus apellidos" value="<%= oldData ? oldData.ape : '' %>">
+                </div>
+                <div class="input-box">
+                    <span class="details">DNI</span>
+                    <input type="text" name="dni" placeholder="Introduce tu DNI" value="<%= oldData ? oldData.dni : '' %>">
+                </div>
+                <div class="input-box">
+                    <span class="details">Email</span>
+                    <input type="email" name="ema" placeholder="Introduce tu email" value="<%= oldData ? oldData.ema : '' %>">
+                </div>
+                <div class="input-box">
+                    <span class="details">Número Telefónico</span>
+                    <input type="text" name="num" placeholder="Introduce tu Número" value="<%= oldData ? oldData.num : '' %>">
+                </div>
+                <div class="input-box">
+                    <span class="details">Contraseña</span>
+                    <div class="popup-suggestion-password">
+                        <input type="password" name="contra" id="txtPasswordPrimary" placeholder="Introduce tu contraseña">
+                        <div class="password" id="divPassword">
+                            <button type="button" id="btnSuggestion">
+                                <span>Contraseña sugerida: </span>
+                                <span id="txtSuggestion"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="input-box">
+                    <span class="details">Confirmar Contraseña</span>
+                    <input type="password" name="confirm_contra" 
+                    id="txtPasswordConfirm" placeholder="Confirmar tu contraseña">
+                </div>
+            </div>
+            <div class="button">
+                <input type="submit" value="Registrar">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let pressend = false;
+        let loading = false;
+        const txtPasswordPrimary = document.getElementById("txtPasswordPrimary");
+        const txtPasswordConfirm = document.getElementById("txtPasswordConfirm")
+        const divPassword = document.getElementById("divPassword");
+        const btnSuggestion = document.getElementById("btnSuggestion");
+        const txtSuggestion = document.getElementById("txtSuggestion");
+
+        txtPasswordPrimary.addEventListener("focus", ()=> {
+            if(!loading){
+                loading = true;
+                fetch("/suggestion-password").then(response => {
+                if  (response.ok) return response.json()
+                    
+                throw new Exception("Error al conectar")
+                }).then(result=>{
+                    divPassword.classList.add("visible")
+                    txtSuggestion.innerHTML = result.text;
+                    loading = false;
+                }).catch(_ =>{
+                    loading = false;
+                })
+            }
+        });
+
+        txtPasswordPrimary.addEventListener("blur", (event) => {
+            if(!divPassword.classList.contains(event.relatedTarget)){
+                divPassword.classList.remove("visible");
+            }
+        });
+
+        btnSuggestion.addEventListener("mousedown", () => {
+            event.preventDefault();
+        });
+
+        btnSuggestion.addEventListener("click", () =>{
+            txtPasswordPrimary.value = txtSuggestion.innerText
+            txtPasswordConfirm.value = txtSuggestion.innerText
+        });
+    </script>
+</body>
+</html>

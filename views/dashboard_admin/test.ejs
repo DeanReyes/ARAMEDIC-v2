@@ -1,0 +1,48 @@
+<form id="loginForm" method="post">
+    <div class="field input-field">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" placeholder="Ingresa tu usuario" required>
+    </div>  
+
+    <div class="field button-field">
+        <button type="submit">Iniciar Sesión</button>
+    </div>
+
+</form>
+
+
+
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+    
+        const formData = {
+            username: 'jose'
+        }
+    
+        axios.post('http://localhost:3000/dashboard_jmedico/test', formData , config)
+            .then( response => {
+                console.log(response.data)
+            })
+            
+            
+        function mostrarServicios() {
+            const listaServicios = document.getElementById("lista-servicios");
+            listaServicios.innerHTML = `
+                <div class="servicio-card">
+                    <h3>Consulta General</h3>
+                    <p><strong>Duración:</strong> 30 min</p>
+                    <p><strong>Precio:</strong> $50</p>
+                    <button class="btn-primary" onclick="editarServicio(1)">Editar</button>
+                </div>
+                <div class="servicio-card">
+                    <h3>Examen de Laboratorio</h3>
+                    <p><strong>Duración:</strong> 1 hora</p>
+                    <p><strong>Precio:</strong> $100</p>
+                    <button class="btn-primary" onclick="editarServicio(2)">Editar</button>
+                </div>
+            `;
+        }
+    
+    })
+    </script>

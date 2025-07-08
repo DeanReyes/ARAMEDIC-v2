@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Historia Clínica - ARAMEDIC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="<%= link %>dashboard_med/css/styles-historia_clinica.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="header-text">
+            <h1><span class="highlight">ARA</span>MEDIC</h1>
+        </div>
+        <div class="main-content">
+            <div class="container">
+                <h2 class="title">Perfil de Historia Clínica del Paciente</h2>
+                <form id="patientForm" method="get">
+                    <!-- Información del Paciente -->
+                    <h3>Información del Paciente</h3>
+                    <div class="form-group">
+                        <label for="patientFirstName">Nombre del paciente:</label>
+                        <input type="text" id="patientFirstName" name="patientFirstName" value="<%= historia.nombre_paciente %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientLastName">Apellido del paciente:</label>
+                        <input type="text" id="patientLastName" name="patientLastName" value="<%= historia.apellido_paciente %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de nacimiento:</label>
+                        <input type="text" id="fechaNacimiento" name="fechaNacimiento" value="<%= historia.fecha_nacimiento %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="edad">Edad:</label>
+                        <input type="text" id="edad" name="edad" value="<%= new Date().getFullYear() - new Date(historia.fecha_nacimiento).getFullYear() %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="genero">Género:</label>
+                        <input type="text" id="genero" name="genero" 
+                               value="<% 
+                                        if (historia.genero === 0) { %>Masculino<% 
+                                        } else if (historia.genero === 1) { %>Femenino<% 
+                                        } else if (historia.genero === 2) { %>Otros<% 
+                                        } %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Estado Civil:</label>
+                        <input type="text" id="estadoCivil" name="estadoCivil" value="<%= historia.estado_civil %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Ocupación:</label>
+                        <input type="text" id="ocupacion" name="ocupacion" value="<%= historia.ocupacion %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" id="telefono" name="telefono" value="<%= historia.telefono %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="text" id="email" name="email" value="<%= historia.email %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" id="direccion" name="direccion" value="<%= historia.direccion %>" readonly>
+                    </div>
+
+                    <!-- Información del Historial Médico -->
+                    <h3>Historial Médico</h3>
+                    <div class="form-group">
+                        <label for="motivo">Motivo de consulta:</label>
+                        <input type="text" id="motivo" name="motivo" value="<%= historia.motivo %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedadesPrevias">Enfermedades previas:</label>
+                        <input type="text" id="enfermedadesPrevias" name="enfermedadesPrevias" value="<%= historia.enfermedades_previas %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="alergias">Alergias:</label>
+                        <input type="text" id="alergias" name="alergias" value="<%= historia.alergias %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicamentosActuales">Medicamentos actuales:</label>
+                        <input type="text" id="medicamentosActuales" name="medicamentosActuales" value="<%= historia.medicamentos_actuales %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="cirugiasPrevias">Cirugías previas:</label>
+                        <input type="text" id="cirugiasPrevias" name="cirugiasPrevias" value="<%= historia.cirugias_previas %>" readonly>
+                    </div>
+
+                    <!-- Información de Hábitos -->
+                    <h3>Hábitos</h3>
+                    <div class="form-group">
+                        <label for="fuma">Fuma:</label>
+                        <input type="text" id="fuma" name="fuma" value="<%= historia.fuma ? 'Sí' : 'No' %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumeAlcohol">Consume alcohol:</label>
+                        <input type="text" id="consumeAlcohol" name="consumeAlcohol" value="<%= historia.consume_alcohol ? 'Sí' : 'No' %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedadesHereditarias">Enfermedades hereditarias:</label>
+                        <input type="text" id="enfermedadesHereditarias" name="enfermedadesHereditarias" value="<%= historia.enfermedades_hereditarias %>" readonly>
+                    </div>
+
+                    <!-- Información de Evaluación Física -->
+                    <h3>Evaluación Física</h3>
+                    <div class="form-group">
+                        <label for="peso">Peso:</label>
+                        <input type="number" id="peso" name="peso" value="<%= historia.peso %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="altura">Altura:</label>
+                        <input type="number" id="altura" name="altura" value="<%= historia.altura %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="imc">Índice de Masa Corporal:</label>
+                        <input type="number" id="imc" name="imc" value="<%= historia.imc %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionFisica">Descripción física:</label>
+                        <input type="text" id="descripcionFisica" name="descripcionFisica" value="<%= historia.descripcion_fisica %>" readonly>
+                    </div>
+
+                    <!-- Información de Procedimientos Médicos -->
+                    <h3>Procedimientos Médicos</h3>
+                    <div class="form-group">
+                        <label for="cirugia">Cirugía:</label>
+                        <input type="text" id="cirugia" name="cirugia" value="<%= historia.cirugia %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="procedimiento">Procedimiento:</label>
+                        <input type="text" id="procedimiento" name="procedimiento" value="<%= historia.procedimiento %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="riesgos">Riesgos:</label>
+                        <input type="text" id="riesgos" name="riesgos" value="<%= historia.riesgos %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="cuidadoPreoperativo">Cuidado preoperatorio:</label>
+                        <input type="text" id="cuidadoPreoperativo" name="cuidadoPreoperativo" value="<%= historia.cuidado_preoperativo %>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="cuidadoPostoperativo">Cuidado postoperatorio:</label>
+                        <input type="text" id="cuidadoPostoperativo" name="cuidadoPostoperativo" value="<%= historia.cuidado_postoperativo %>" readonly>
+                    </div>
+
+                    <!-- Botón para regresar -->
+                    <button type="button" onclick="location.href='/dashboard_paciente'">Regresar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Función para formatear la fecha en formato DD/MM/YYYY
+        function formatDate(date) {
+            const d = new Date(date);
+            const day = d.getDate().toString().padStart(2, '0');
+            const month = (d.getMonth() + 1).toString().padStart(2, '0'); // El mes empieza desde 0
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const fechaNacimientoInput = document.getElementById('fechaNacimiento');
+            if (fechaNacimientoInput && fechaNacimientoInput.value) {
+                const formattedDate = formatDate(fechaNacimientoInput.value);
+                fechaNacimientoInput.value = formattedDate; // Asignamos la fecha formateada
+            }
+        });
+    </script>
+</body>
+</html>

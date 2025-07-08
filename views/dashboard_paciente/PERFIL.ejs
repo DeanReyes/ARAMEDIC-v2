@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="/Perfil_style.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <%- include('../_partials/header') %>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <%- include('../_partials/sidebar') %>
+
+        <!-- Contenido Principal -->
+        <main id="main-content">
+            <!-- Sub-header -->
+            <%- include('../_partials/sub_header') %>
+
+            <!-- Notificaciones y Modales -->
+            <%- include('../_partials/notificaciones') %>
+            <%- include('../_partials/modal') %>
+
+            <!-- Sección de Perfil -->
+            <section id="perfil">
+                <h1>Información Básica del Usuario</h1>
+                <div class="content-box">
+                    <!-- Información de Usuario -->
+                    <div class="info-wrapper">
+                        <div class="info-box">
+                            <h2>Información Usuario</h2>
+                            <form id="formPerfil" action="/dashboard_paciente/perfil/editar" method="POST">
+                                <div class="form-grid">
+                                    <label for="nombre">Nombre:</label>
+                                    <input type="text" id="nombre" name="nombre" value="<%= paciente ? paciente.nombre : '' %>" required>
+
+                                    <label for="apellido">Apellido:</label>
+                                    <input type="text" id="apellido" name="apellido" value="<%= paciente ? paciente.apellido : '' %>" required>
+
+                                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                                    <!-- Campo de tipo date con formato yyyy-mm-dd -->
+                                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"
+                                        value="<%= paciente ? paciente.fecha_nacimiento : '' %>" required>
+
+                                    <label for="edad">Edad:</label>
+                                    <input type="text" name="telefono" value="<%= paciente.telefono %>" required />
+
+                                    <label for="genero">Género:</label>
+                                    <select name="genero">
+                                        <option value="0" <%= paciente.genero === 0 ? "selected" : "" %>>Masculino</option>
+                                        <option value="1" <%= paciente.genero === 1 ? "selected" : "" %>>Femenino</option>
+                                    </select>
+
+                                    <label for="estadoCivil">Estado Civil:</label>
+                                    <select name="estado_civil">
+                                        <option value="soltero" <%= paciente.estado_civil === "soltero" ? "selected" : "" %>>Soltero</option>
+                                        <option value="casado" <%= paciente.estado_civil === "casado" ? "selected" : "" %>>Casado</option>
+                                        <option value="divorciado" <%= paciente.estado_civil === "divorciado" ? "selected" : "" %>>Divorciado</option>
+                                    </select>
+
+                                    <label for="ocupacion">Ocupación:</label>
+                                    <input type="text" name="ocupacion" value="<%= paciente.ocupacion %>" required />
+                                    
+                                </div>
+
+                                <h2>Credenciales Globales</h2>
+                                <div class="form-grid">
+                                    <label for="email">Correo Electrónico:</label>
+                                    <input type="email" id="email" name="email" value="<%= paciente ? paciente.email : '' %>" required>
+                                    <label for="txtPasswordPrimary">Contraseña:</label>
+                                    <input type="password" id="txtPasswordPrimary" name="contrasena" required>
+
+                                    <label for="txtPasswordConfirm">Confirmar Contraseña:</label>
+                                    <input type="password" id="txtPasswordConfirm" name="confirmPassword" required>
+                                </div>
+
+                                <!-- Botones de Acción -->
+                                <div class="actions">
+                                    <button type="submit">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../_partials/footer_pac') %>
+
+    <script>
+
+    // Validación de contraseñas antes de enviar el formulario
+    document.getElementById("formPerfil").addEventListener("submit", function(event) {
+        const password = document.getElementById("txtPasswordPrimary").value;
+        const confirmPassword = document.getElementById("txtPasswordConfirm").value;
+        if (password !== confirmPassword) {
+            event.preventDefault(); // Previene el envío del formulario
+            alert("Las contraseñas no coinciden.");
+        }
+    });
+
+
+        // // Función para formatear la fecha en formato DD/MM/YYYY
+        // function formatDate(date) {
+        //     const d = new Date(date);
+        //     const day = d.getDate().toString().padStart(2, '0');
+        //     const month = (d.getMonth() + 1).toString().padStart(2, '0'); // El mes empieza desde 0
+        //     const year = d.getFullYear();
+        //     return `${day}/${month}/${year}`;
+        // }
+
+        // // Al cargar la página, formateamos la fecha del campo de fecha de nacimiento
+        // window.addEventListener('DOMContentLoaded', (event) => {
+        //     const fechaInput = document.getElementById('fecha_nacimiento');
+        //     if (fechaInput) {
+        //         const rawDate = fechaInput.value; // Fecha en formato YYYY-MM-DD
+        //         fechaInput.value = formatDate(rawDate); // Modificar al formato DD/MM/YYYY
+        //     }
+
+        //     // Formatear las fechas en la tabla
+        //     document.querySelectorAll('.fecha-nacimiento').forEach(element => {
+        //         const rawDate = element.getAttribute('data-fecha');
+        //         element.textContent = formatDate(rawDate);
+        //     });
+        // });
+
+        // // Mostrar/ocultar contraseñas
+        // function togglePassword(inputId, button) {
+        //     const input = document.getElementById(inputId);
+        //     input.type = input.type === "password" ? "text" : "password";
+        // }
+
+        // // Manejar la selección de imagen
+        // const imageInput = document.getElementById("imageInput");
+        // const userImage = document.getElementById("userImage");
+        // const addImageButton = document.getElementById("addImageButton");
+        // const removeImageButton = document.getElementById("removeImageButton");
+
+        // addImageButton.addEventListener("click", () => {
+        //     imageInput.click();
+        // });
+
+        // imageInput.addEventListener("change", (event) => {
+        //     const file = event.target.files[0];
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = function (e) {
+        //             userImage.src = e.target.result;
+        //         };
+        //         reader.readAsDataURL(file);
+        //     }
+        // });
+
+        // removeImageButton.addEventListener("click", () => {
+        //     userImage.src = "/imgs/placeholder.jpg";
+        //     imageInput.value = "";
+        // });
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<%- include('../_partials/header') %>
+
+    <div class="dashboard-container">
+        <%- include('../_partials/sidebar') %>
+
+        <!-- Contenido Principal -->
+        <main id="main-content">
+            <header class="dashboard-header">
+                <div class="header-content">
+                    <h1 id="welcome-message" class="welcome-message">Bienvenido a ARAMEDIC</h1>
+                    <%= link %>
+                </div>
+            </header>
+
+            <!-- Lista de Notificaciones -->
+            <div id="notifications-panel" class="notifications-panel">
+                <h3>Notificaciones</h3>
+                <ul class="notifications-list">
+                    <li class="notification-item">
+                        <i class="fas fa-user-clock"></i>
+                        <div class="notification-content">
+                            <p>Nueva cita programada con Juan Pérez</p>
+                            <span class="notification-time">Hace 5 minutos</span>
+                        </div>
+                    </li>
+                    <li class="notification-item">
+                        <i class="fas fa-file-medical-alt"></i>
+                        <div class="notification-content">
+                            <p>Actualización en la historia clínica de María Gómez</p>
+                            <span class="notification-time">Hace 2 horas</span>
+                        </div>
+                    </li>
+                    <li class="notification-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="notification-content">
+                            <p>Recordatorio: Conferencia médica mañana</p>
+                            <span class="notification-time">Hace 1 día</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <section id="calendario" class="dashboard-section active">
+                <h2 class="section-title">Calendario</h2>
+                <!-- Contenido del calendario -->
+                <p>Aquí irá el contenido del calendario</p>
+
+            </section>
+
+
+            <section id="cuentas" >
+                <h2 class="section-title">Cuentas y Trabajadores</h2>
+                <div class="search-bar">
+                    <input type="text" id="buscar-cuenta" placeholder="Buscar cuenta o trabajador...">
+                    <button id="agregar-cuenta" class="btn-primary">Agregar Cuenta</button>
+                </div>
+                <div id="lista-cuentas" class="lista-container"></div>
+            </section>
+
+
+        </main>
+    </div>
+
+    
+    <!-- <script src="/dashboard_med/js/main.js"></script> -->
+
+<%- include('../_partials/footer') %>

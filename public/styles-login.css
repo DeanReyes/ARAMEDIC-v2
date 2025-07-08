@@ -1,0 +1,140 @@
+/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-image: 
+    linear-gradient(
+      to right,
+      #353a7f,
+      rgba(40, 88, 167, 0.7)
+    ),
+    url('/imgs/header.png'); /* Imagen de fondo */
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Logo ARAMEDIC */
+    margin: 0;
+    font-family: Arial, sans-serif;
+    /*background: linear-gradient(to right, #2B3A67, #324A91);  Fondo degradado de la página */
+}
+
+.container_forms {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    
+}
+
+.form-content {
+    text-align: center;
+}
+
+header {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    /* Logo ARAMEDIC */
+    background-color: transparent; /* Fondo transparente para el header */
+    padding: 15px;
+    position: absolute; /* Posiciona el logo en la esquina superior izquierda */
+    top: 0;
+    left: 0;
+}
+
+/* Logo ARAMEDIC */
+.logo {
+    color: white; /* Color general del texto */
+    font-size: 24px; /* Tamaño de la fuente */
+    font-weight: bold;
+}
+
+.logo .highlight {
+    color: #fbbd08; /* Color específico para la parte "ARA" */
+}
+
+
+p {
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.field {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.input-field {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.forgot-password {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.register-section {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.register-section span {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.forgot-pass,
+.register {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-pass:hover,
+.register:hover {
+    text-decoration: underline;
+}

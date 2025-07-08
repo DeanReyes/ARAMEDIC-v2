@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Historia Clínica - ARAMEDIC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="<%= link %>dashboard_med/css/styles-historia_clinica.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="header-text">
+            <h1><span class="highlight">ARA</span>MEDIC</h1>
+        </div>
+        <div class="main-content">
+            <div class="container">
+                <h2 class="title">Registrar Historia Clínica</h2>
+                <form id="patientForm" method="post" action="/dashboard_jmedico/guardar_historia_clinica">
+                    <!-- Select para elegir al paciente -->
+                    <h3>Seleccionar Paciente</h3>
+                    <div class="form-group">
+                        <label for="pacienteId">DNI del Paciente:</label>
+                        <select id="pacienteId" name="pacienteId" required>
+                            <option value="">Seleccione el DNI</option>
+                            <% pacientes.forEach(function (paciente) { %>
+                                <option value="<%= paciente.paciente_id %>"><%= paciente.dni %> - <%= paciente.nombre %> <%= paciente.apellido %></option>
+                            <% }); %>
+                        </select>
+
+                        <label for="medicoId">Médico:</label>
+                        <select id="medicoId" name="medicoId" required>
+                            <option value="">Seleccione un médico</option>
+                            <% medicos.forEach(function(medico) { %>
+                                <option value="<%= medico.id %>"><%= medico.dni %> - <%= medico.nombre %> <%= medico.apellido %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <!-- Información del Paciente (se autocompleta) -->
+                    <h3>Información del Paciente</h3>
+                    <div class="form-group">
+                        <label for="patientFirstName">Nombre del paciente:</label>
+                        <input type="text" id="patientFirstName" name="patientFirstName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientLastName">Apellido del paciente:</label>
+                        <input type="text" id="patientLastName" name="patientLastName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de nacimiento:</label>
+                        <input type="text" id="fechaNacimiento" name="fechaNacimiento" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" id="telefono" name="telefono" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" id="direccion" name="direccion" readonly>
+                    </div>
+
+                    <!-- Información del Médico (se autocompleta) -->
+                    <h3>Información del Médico</h3>
+                    <div class="form-group">
+                        <label for="medicoFirstName">Nombre del médico:</label>
+                        <input type="text" id="medicoFirstName" name="medicoFirstName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicoLastName">Apellido del médico:</label>
+                        <input type="text" id="medicoLastName" name="medicoLastName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicoEspecialidad">Especialidad:</label>
+                        <input type="text" id="medicoEspecialidad" name="medicoEspecialidad" readonly>
+                    </div>
+
+                    <!-- Información del Historial Médico -->
+
+                    <h3>Historial Médico</h3>
+                    <!-- <div class="form-group">
+                        <label for="motivo">Id Historial Clinico:</label>
+                        <input type="number" id="id" name="id" required />
+                    </div> -->
+                    <div class="form-group">
+                        <label for="motivo">Motivo:</label>
+                        <input type="text" id="motivo" name="motivo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedadesPrevias">Enfermedades previas:</label>
+                        <input type="text" id="enfermedadesPrevias" name="enfermedadesPrevias">
+                    </div>
+                    <div class="form-group">
+                        <label for="alergias">Alergias:</label>
+                        <input type="text" id="alergias" name="alergias">
+                    </div>
+                    <div class="form-group">
+                        <label for="medicamentosActuales">Medicamentos actuales:</label>
+                        <input type="text" id="medicamentosActuales" name="medicamentosActuales">
+                    </div>
+                    <div class="form-group">
+                        <label for="cirugiasPrevias">Cirugías previas:</label>
+                        <input type="text" id="cirugiasPrevias" name="cirugiasPrevias">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuma">Fuma:</label>
+                        <select id="fuma" name="fuma">
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumeAlcohol">Consume alcohol:</label>
+                        <select id="consumeAlcohol" name="consumeAlcohol">
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedadesHereditarias">Enfermedades hereditarias:</label>
+                        <input type="text" id="enfermedadesHereditarias" name="enfermedadesHereditarias">
+                    </div>
+                    <div class="form-group">
+                        <label for="peso">Peso:</label>
+                        <input type="number" id="peso" name="peso">
+                    </div>
+                    <div class="form-group">
+                        <label for="altura">Altura:</label>
+                        <input type="number" id="altura" name="altura">
+                    </div>
+                    <div class="form-group">
+                        <label for="imc">IMC:</label>
+                        <input type="number" id="imc" name="imc" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionFisica">Descripción física:</label>
+                        <input type="text" id="descripcionFisica" name="descripcionFisica">
+                    </div>
+                    <div class="form-group">
+                        <label for="cirugia">Cirugía:</label>
+                        <input type="text" id="cirugia" name="cirugia">
+                    </div>
+                    <div class="form-group">
+                        <label for="procedimiento">Procedimiento:</label>
+                        <input type="text" id="procedimiento" name="procedimiento">
+                    </div>
+                    <div class="form-group">
+                        <label for="riesgos">Riesgos:</label>
+                        <input type="text" id="riesgos" name="riesgos">
+                    </div>
+                    <div class="form-group">
+                        <label for="cuidadoPreoperativo">Cuidado preoperativo:</label>
+                        <input type="text" id="cuidadoPreoperativo" name="cuidadoPreoperativo">
+                    </div>
+                    <div class="form-group">
+                        <label for="cuidadoPostoperativo">Cuidado postoperativo:</label>
+                        <input type="text" id="cuidadoPostoperativo" name="cuidadoPostoperativo">
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <button type="button" onclick="location.href='/dashboard_jmedico/historias'">Regresar</button>
+                    <button type="submit">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Autocompletar datos del paciente
+        document.getElementById('pacienteId').addEventListener('change', function () {
+        const pacienteDNI = this.value.trim();
+        if (pacienteDNI) {
+            fetch(`/dashboard_jmedico/getPacienteByDNI/${pacienteDNI}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Paciente no encontrado');
+                    }
+                    return response.json();
+            })
+            .then(data => {
+                // Procesar la fecha si contiene una marca de tiempo
+                if (data.fecha_nacimiento) {
+                    const fecha = new Date(data.fecha_nacimiento);
+                    data.fecha_nacimiento = fecha.toISOString().split('T')[0]; // yyyy-MM-dd
+                }
+                // Rellenar los campos con los datos del paciente
+                document.getElementById('patientFirstName').value = data.nombre || '';
+                document.getElementById('patientLastName').value = data.apellido || '';
+                document.getElementById('fechaNacimiento').value = data.fecha_nacimiento || '';
+                document.getElementById('telefono').value = data.telefono || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('direccion').value = data.direccion || '';
+            })
+            .catch(error => {
+                console.error('Error al obtener datos del paciente:', error);
+                alert('Paciente no encontrado. Verifique el DNI.');
+                // Limpiar los campos si ocurre un error
+                document.getElementById('patientFirstName').value = '';
+                document.getElementById('patientLastName').value = '';
+                document.getElementById('fechaNacimiento').value = '';
+                document.getElementById('telefono').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('direccion').value = '';
+            });
+        }
+        });
+
+
+        document.getElementById('pacienteId').addEventListener('change', function () {
+    const pacienteId = this.value.trim();
+    if (pacienteId) {
+        fetch(`/dashboard_jmedico/getUltimaHistoriaClinica/${pacienteId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se encontró historia clínica pasada.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Autocompletar los campos del formulario
+                document.getElementById('motivo').value = data.motivo || '';
+                document.getElementById('enfermedadesPrevias').value = data.enfermedades_previas || '';
+                document.getElementById('alergias').value = data.alergias || '';
+                document.getElementById('medicamentosActuales').value = data.medicamentos_actuales || '';
+                document.getElementById('cirugiasPrevias').value = data.cirugias_previas || '';
+                document.getElementById('fuma').value = data.fuma ? '1' : '0';
+                document.getElementById('consumeAlcohol').value = data.consume_alcohol ? '1' : '0';
+                document.getElementById('enfermedadesHereditarias').value = data.enfermedades_hereditarias || '';
+                document.getElementById('peso').value = data.peso || '';
+                document.getElementById('altura').value = data.altura || '';
+                document.getElementById('imc').value = data.imc || '';
+                document.getElementById('descripcionFisica').value = data.descripcion_fisica || '';
+                document.getElementById('cirugia').value = data.cirugia || '';
+                document.getElementById('procedimiento').value = data.procedimiento || '';
+                document.getElementById('riesgos').value = data.riesgos || '';
+                document.getElementById('cuidadoPreoperativo').value = data.cuidado_preoperativo || '';
+                document.getElementById('cuidadoPostoperativo').value = data.cuidado_postoperativo || '';
+            })
+            .catch(error => {
+                console.error('Error al obtener la historia clínica:', error);
+                alert('No se encontró una historia clínica para este paciente.');
+                // Limpia los campos si no hay datos
+                document.getElementById('motivo').value = '';
+                document.getElementById('enfermedadesPrevias').value = '';
+                document.getElementById('alergias').value = '';
+                document.getElementById('medicamentosActuales').value = '';
+                document.getElementById('cirugiasPrevias').value = '';
+                document.getElementById('fuma').value = '0';
+                document.getElementById('consumeAlcohol').value = '0';
+                document.getElementById('enfermedadesHereditarias').value = '';
+                document.getElementById('peso').value = '';
+                document.getElementById('altura').value = '';
+                document.getElementById('imc').value = '';
+                document.getElementById('descripcionFisica').value = '';
+                document.getElementById('cirugia').value = '';
+                document.getElementById('procedimiento').value = '';
+                document.getElementById('riesgos').value = '';
+                document.getElementById('cuidadoPreoperativo').value = '';
+                document.getElementById('cuidadoPostoperativo').value = '';
+            });
+    }
+});
+
+        // Autocompletar datos del médico
+        document.getElementById('medicoId').addEventListener('change', function() {
+            const medicoId = this.value;
+            if (medicoId) {
+                fetch(`/dashboard_jmedico/getMedico/${medicoId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Rellenar los campos con los datos del médico
+                        document.getElementById('medicoFirstName').value = data.nombre;
+                        document.getElementById('medicoLastName').value = data.apellido;
+                        document.getElementById('medicoEspecialidad').value = data.especialidad;
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener datos del médico:', error);
+                    });
+            } else {
+                // Limpiar los campos si no hay médico seleccionado
+                document.getElementById('medicoFirstName').value = '';
+                document.getElementById('medicoLastName').value = '';
+                document.getElementById('medicoEspecialidad').value = '';
+            }
+        });
+    </script>
+</body>
+</html>

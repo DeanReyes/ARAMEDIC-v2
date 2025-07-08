@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Correo Electrónico - ARAMEDIC</title>
+    <link rel="stylesheet" href="/style_verif-correo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <h1 class="logo">ARA<span class="highlight">MEDIC</span></h1>
+        </header>
+
+        <main class="container">
+            <div class="email-icon-wrapper">
+                <img src="/imgs/correo.png" alt="Correo" class="email-icon">
+            </div>
+            <div class="content-wrapper">
+                <h2 class="title">Verificar Correo Electrónico</h2>
+                <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                    <div class="error-box">
+                        <ul class="error-list">
+                            <% errors.forEach(function(error) { %>
+                                <li><%= error.msg %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                <% } %>
+                <form action="/recuperarcuentaU" method="POST" class="email-form">
+                    <div class="input-group">
+                        <label for="email">Introduce tu correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Enviar</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

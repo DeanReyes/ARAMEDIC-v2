@@ -1,0 +1,519 @@
+<%- include('../_partials/header') %>
+
+<div class="dashboard-container">
+    <%- include('../_partials/sidebar') %>
+
+    <!-- Contenido Principal -->
+    <main id="main-content">
+        <%- include('../_partials/sub_header') %>
+        <%- include('../_partials/notificaciones') %>
+
+        <section id="usuarios">
+            <h2 class="section-title">Listado de Usuarios</h2>
+
+            <!-- Barra de búsqueda -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por DNI">
+            </div>
+
+            <!-- Botones para agregar Paciente y Trabajador -->
+            <button id="btnAgregarPaciente" class="add-button">
+                <i class="fas fa-plus-circle"></i> Agregar Paciente
+            </button>
+            <button id="btnAgregarTrabajador" class="add-button">
+                <i class="fas fa-plus-circle"></i> Agregar Trabajador
+            </button>
+
+            <!-- Tabla de Usuarios -->
+            <table id="usuarios-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead style="background-color: #007BFF; color: white;">
+                    <tr>
+                        <th style="padding: 10px; text-align: left;">DNI</th>
+                        <th style="padding: 10px; text-align: left;">Nombre</th>
+                        <th style="padding: 10px; text-align: left;">Apellido</th>
+                        <th style="padding: 10px; text-align: left;">Email</th>
+                        <th style="padding: 10px; text-align: left;">Rol</th>
+                        <th style="padding: 10px; text-align: left;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% usuarios.forEach(usuario => { %>
+                        <tr>
+                            <td style="padding: 10px;"><%= usuario.dni %></td>
+                            <td style="padding: 10px;"><%= usuario.nombre || 'N/A' %></td>
+                            <td style="padding: 10px;"><%= usuario.apellido || 'N/A' %></td>
+                            <td style="padding: 10px;"><%= usuario.email || 'N/A' %></td>
+                            <td style="padding: 10px;">
+                                <% if (usuario.rol_id === 1) { %>
+                                    Paciente
+                                <% } else if (usuario.rol_id === 2) { %>
+                                    Medico
+                                <% } else if (usuario.rol_id === 3) { %>
+                                    Administrador
+                                <% } else { %>
+                                    Desconocido
+                                <% } %>
+                            </td>
+                            <td style="padding: 10px;">
+                                <button 
+                                    onclick="editarUsuario('<%= usuario.dni %>')" 
+                                    style="background-color: #28a745; color: white; border: none; padding: 10px 10px; cursor: pointer; margin-right: 5px;" 
+                                    class="edit-button">
+                                    Editar
+                                </button>
+                                <button 
+                                    onclick="eliminarUsuario('<%= usuario.dni %>')" 
+                                    style="background-color: #dc3545; color: white; border: none; padding: 10px 10px; cursor: pointer;" 
+                                    class="delete-button">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+
+<!-- Modal para añadir/editar Trabajador -->
+<div id="modalTrabajador" class="modal">
+    <div class="modal-content">
+        <span id="cerrarMtrabajador" class="close">&times;</span>
+        <h2 id="modalTitle">Agregar Trabajador</h2>
+        <form id="formTrabajador">
+            <div class="form-group">
+                <label for="dniUsuarioT">DNI</label>
+                <input type="text" id="dniUsuarioT" name="dniUsuarioT" required>
+            </div>
+            <div class="form-group">
+                <label for="nombreUsuarioT">Nombre</label>
+                <input type="text" id="nombreUsuarioT" name="nombreUsuarioT" required>
+            </div>
+            <div class="form-group">
+                <label for="apellidoUsuarioT">Apellido</label>
+                <input type="text" id="apellidoUsuarioT" name="apellidoUsuarioT" required>
+            </div>
+            <div class="form-group">
+                <label for="emailUsuarioT">Email</label>
+                <input type="email" id="emailUsuarioT" name="emailUsuarioT" required>
+            </div>
+            <div class="form-group">
+                <label for="especialidad">Especialidad</label>
+                <input type="text" id="especialidad" name="especialidad" required>
+            </div>
+            <div class="form-group">
+                <label for="telefonoT">Teléfono</label>
+                <input type="text" id="telefonoT" name="telefonoT" required>
+            </div>
+            <div class="form-group">
+                <label for="rolT">Rol</label>
+                <select id="rolT" name="rolT" required></select>
+            </div>
+            <div class="form-group">
+                <label for="contraseñaUsuarioT">Contraseña</label>
+                <input type="password" id="contraseñaUsuarioT" name="contraseñaUsuarioT" required>
+            </div>
+            <div class="form-group">
+                <label for="repetirContraseñaUsuarioT">Repetir Contraseña</label>
+                <input type="password" id="repetirContraseñaUsuarioT" name="repetirContraseñaUsuarioT" required>
+            </div>
+            <button type="submit" id="botonGuardarTrabajador" class="btn-guardar">Guardar Trabajador</button>
+            <button type="submit" id="botonGuardarCambiosTrabajador" class="btn-guardar">Guardar Cambios T</button>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- Modal para añadir/editar Paciente -->
+<div id="modalPaciente" class="modal">
+    <div class="modal-content">
+        <span id="cerrarPaciente" class="close">&times;</span>
+        <h2 id="modalTitle">Agregar Paciente</h2>
+        <form id="formPaciente">
+            <div class="form-group">
+                <label for="dniUsuarioP">DNI</label>
+                <input type="text" id="dniUsuarioP" name="dniUsuarioP" required>
+            </div>
+            <div class="form-group">
+                <label for="nombreUsuarioP">Nombre</label>
+                <input type="text" id="nombreUsuarioP" name="nombreUsuarioP" required>
+            </div>
+            <div class="form-group">
+                <label for="apellidoUsuarioP">Apellido</label>
+                <input type="text" id="apellidoUsuarioP" name="apellidoUsuarioP" required>
+            </div>
+            <div class="form-group">
+                <label for="emailUsuarioP">Email</label>
+                <input type="email" id="emailUsuarioP" name="emailUsuarioP" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+            </div>
+            <div class="form-group">
+                <label for="genero">Género</label>
+                <select id="genero" name="genero" required>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="estadoCivil">Estado Civil</label>
+                <select id="estadoCivil" name="estadoCivil" required>
+                    <option value="soltero">Soltero</option>
+                    <option value="casado">Casado</option>
+                    <option value="divorciado">Divorciado</option>
+                    <option value="viudo">Viudo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ocupacion">Ocupación</label>
+                <input type="text" id="ocupacion" name="ocupacion" required>
+            </div>
+            <div class="form-group">
+                <label for="direccionPaciente">Dirección</label>
+                <input type="text" id="direccionPaciente" name="direccionPaciente" required>
+            </div>
+            <div class="form-group">
+                <label for="telefonoP">Teléfono</label>
+                <input type="text" id="telefonoP" name="telefonoP" required>
+            </div>
+            <div class="form-group">
+                <label for="rolP">Rol</label>
+                <select id="rolP" name="rolP" required></select>
+            </div>
+            <div class="form-group">
+                <label for="contraseñaUsuarioP">Contraseña</label>
+                <input type="password" id="contraseñaUsuarioP" name="contraseñaUsuarioP" required>
+            </div>
+            <div class="form-group">
+                <label for="repetirContraseñaUsuarioP">Repetir Contraseña</label>
+                <input type="password" id="repetirContraseñaUsuarioP" name="repetirContraseñaUsuarioP" required>
+            </div>
+            <button type="submit" id="botonGuardarPaciente" class="btn-guardar">Guardar Paciente</button>
+            <button type="submit" id="botonGuardarCambiosPaciente" class="btn-guardar">Guardar Cambios P</button>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Referencias generales
+    const usuariosTableBody = document.querySelector("#usuarios-table tbody");
+    const searchInput = document.getElementById("searchInput");
+
+    // Referencias para el modal de paciente
+    const btnAgregarPaciente = document.getElementById("btnAgregarPaciente");
+    const modalPaciente = document.getElementById("modalPaciente");
+    const closeModalPaciente = modalPaciente.querySelector(".close");
+    const formPaciente = document.getElementById("formPaciente");
+    const dniUsuarioPInput = document.getElementById("dniUsuarioP");
+    const nombreUsuarioPInput = document.getElementById("nombreUsuarioP");
+    const apellidoUsuarioPInput = document.getElementById("apellidoUsuarioP");
+    const emailUsuarioPInput = document.getElementById("emailUsuarioP");
+    const fechaNacimientoInput = document.getElementById("fechaNacimiento");
+    const generoSelect = document.getElementById("genero");
+    const estadoCivilSelect = document.getElementById("estadoCivil");
+    const ocupacionInput = document.getElementById("ocupacion");
+    const direccionInput = document.getElementById("direccionPaciente");
+    const telefonoInput = document.getElementById("telefonoP");
+    const rolSelectPaciente = document.getElementById("rolP");
+    const botonGuardarCambiosPaciente = document.getElementById("botonGuardarCambiosPaciente");
+
+    // Referencias para el modal de trabajador
+    const btnAgregarTrabajador = document.getElementById("btnAgregarTrabajador");
+    const modalTrabajador = document.getElementById("modalTrabajador");
+    const closeModalTrabajador = modalTrabajador.querySelector(".close");
+    const formTrabajador = document.getElementById("formTrabajador");
+    const especialidadInput = document.getElementById("especialidad");
+    const telefonoInputTrabajador = document.getElementById("telefonoT");
+    const rolSelectTrabajador = document.getElementById("rolT");
+    const especialidadLabel = document.querySelector("label[for='especialidad']");
+    const telefonoLabelTrabajador = document.querySelector("label[for='telefonoT']");
+    const botonGuardarCambiosTrabajador = document.getElementById("botonGuardarCambiosTrabajador");
+
+
+    // Función para actualizar la tabla de usuarios
+    function actualizarTabla(usuarios) {
+        usuariosTableBody.innerHTML = ''; // Limpiar tabla
+
+        usuarios.forEach(usuario => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="padding: 10px;">${usuario.dni}</td>
+                <td style="padding: 10px;">${usuario.nombre || 'N/A'}</td>
+                <td style="padding: 10px;">${usuario.apellido || 'N/A'}</td>
+                <td style="padding: 10px;">${usuario.email || 'N/A'}</td>
+                <td style="padding: 10px;">
+                    ${usuario.rol_id === 1 ? 'Paciente' : usuario.rol_id === 2 ? 'Medico' : usuario.rol_id === 3 ? 'Especialista' : 'Desconocido'}
+                </td>
+                <td style="padding: 10px;">
+                    <button onclick="editarUsuario('${usuario.dni}')" class="edit-button" style="background-color: #28a745; color: white; padding: 10px;">Editar</button>
+                    <button onclick="eliminarUsuario('${usuario.dni}')" class="delete-button" style="background-color: #dc3545; color: white; padding: 10px;">Eliminar</button>
+                </td>
+            `;
+            usuariosTableBody.appendChild(tr);
+        });
+    }
+
+    // Mostrar el modal para agregar paciente
+    btnAgregarPaciente.addEventListener("click", function () {
+        formPaciente.reset();
+
+        // Configuración específica para pacientes
+        fechaNacimientoInput.style.display = "none";
+        generoSelect.style.display = "none";
+        estadoCivilSelect.style.display = "none";
+        ocupacionInput.style.display = "none";
+        direccionInput.style.display = "none";
+        telefonoInput.style.display = "none";
+
+        document.querySelector("label[for='fechaNacimiento']").style.display = "none";
+        document.querySelector("label[for='genero']").style.display = "none";
+        document.querySelector("label[for='estadoCivil']").style.display = "none";
+        document.querySelector("label[for='ocupacion']").style.display = "none";
+        document.querySelector("label[for='direccionPaciente']").style.display = "none";
+        document.querySelector("label[for='telefonoP']").style.display = "none";
+
+        rolSelectPaciente.innerHTML = `<option value="1">Paciente</option>`;
+        botonGuardarCambiosPaciente.style.display = "none";
+        modalPaciente.classList.add("show");
+    });
+
+    // Cerrar el modal de paciente
+    closeModalPaciente.addEventListener("click", function () {
+        modalPaciente.classList.remove("show");
+    });
+
+    // Mostrar el modal para agregar trabajador
+    btnAgregarTrabajador.addEventListener("click", function () {
+        formTrabajador.reset();
+
+        // Configuración específica para trabajadores
+        especialidadInput.style.display = "none";
+        especialidadInput.removeAttribute("required");
+        especialidadLabel.style.display = "none";
+
+        telefonoInputTrabajador.style.display = "none";
+        telefonoInputTrabajador.removeAttribute("required");
+        telefonoLabelTrabajador.style.display = "none";
+
+        rolSelectTrabajador.innerHTML = `
+            <option value="2">Medico</option>
+            <option value="3">Administrador</option>
+        `;
+        botonGuardarCambiosTrabajador.style.display = "none";
+        modalTrabajador.classList.add("show");
+    });
+
+    // Cerrar el modal de trabajador
+    closeModalTrabajador.addEventListener("click", function () {
+        modalTrabajador.classList.remove("show");
+    });
+
+    // Cerrar modal si se hace clic fuera del mismo
+    window.addEventListener("click", function (event) {
+        if (event.target === modalPaciente) {
+            modalPaciente.classList.remove("show");
+        } else if (event.target === modalTrabajador) {
+            modalTrabajador.classList.remove("show");
+        }
+    });
+
+    // Lógica para buscar usuarios en tiempo real
+    searchInput.addEventListener('input', async (e) => {
+        const dni = e.target.value;
+
+        try {
+            const response = await fetch(`/dashboard_jmedico/cuentas/buscar?dni=${dni}`);
+            if (!response.ok) throw new Error('Error al buscar cuentas');
+
+            const usuarios = await response.json();
+            actualizarTabla(usuarios);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    // Función para cargar usuarios al iniciar la página
+    async function cargarUsuarios() {
+        try {
+            const response = await fetch(`/dashboard_jmedico/cuentas/buscar`);
+            const usuarios = await response.json();
+            actualizarTabla(usuarios);
+        } catch (error) {
+            console.error("Error al cargar usuarios:", error);
+        }
+    }
+
+
+    // Función para guardar los datos del formulario del trabajador
+document.getElementById("formTrabajador").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    // Verificar que el botón que disparó el evento sea el botón "botonGuardarTrabajador"
+    const submitter = event.submitter; // Obtenemos el botón que disparó el evento
+    if (submitter && submitter.id !== "botonGuardarTrabajador") {
+        return; // Si no es el botón correcto, salimos de la función
+    }
+
+    const dni = document.getElementById("dniUsuarioT").value;
+    const nombre = document.getElementById("nombreUsuarioT").value;
+    const apellido = document.getElementById("apellidoUsuarioT").value;
+    const email = document.getElementById("emailUsuarioT").value;
+    const rol = document.getElementById("rolT").value;
+    const contrasena = document.getElementById("contraseñaUsuarioT").value;
+    const repetirContrasena = document.getElementById("repetirContraseñaUsuarioT").value;
+
+    // Validar que las contraseñas coincidan
+    if (contrasena !== repetirContrasena) {
+        alert("Las contraseñas no coinciden.");
+        return;
+    }
+
+    try {
+        // Verificar si el DNI ya está registrado
+        const response = await fetch(`/dashboard_jmedico/cuentas/validar-dni?dni=${dni}`);
+        const { existe } = await response.json();
+
+        if (existe) {
+            alert("El DNI ya está registrado.");
+            return;
+        }
+
+        // Enviar los datos al servidor
+        const responseGuardar = await fetch('/dashboard_jmedico/cuentas/guardar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                dni,
+                nombre,
+                apellido,
+                email,
+                rol,
+                contrasena
+            })
+        });
+
+        const result = await responseGuardar.json();
+
+        if (result.success) {
+            alert(result.mensaje);
+            document.getElementById("modalTrabajador").classList.remove("show");
+            cargarTrabajadores();
+        } else {
+            alert(result.mensaje);
+        }
+    } catch (error) {
+        console.error("Error al guardar trabajador:", error);
+        alert("Error al guardar trabajador");
+    }
+});
+
+// Función para cargar trabajadores
+async function cargarTrabajadores() {
+    try {
+        const response = await fetch(`/dashboard_jmedico/cuentas/buscar`);
+        const trabajadores = await response.json();
+        actualizarTabla(trabajadores);
+    } catch (error) {
+        console.error("Error al cargar trabajadores:", error);
+    }
+}
+
+
+
+
+
+
+
+
+// Función para guardar los datos del formulario del paciente
+document.getElementById("formPaciente").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    // Verificar que el botón que disparó el evento sea el botón "botonGuardarPaciente"
+    const submitter = event.submitter; // Obtenemos el botón que disparó el evento
+    if (submitter && submitter.id !== "botonGuardarPaciente") {
+        return; // Si no es el botón correcto, salimos de la función
+    }
+
+    const dni = document.getElementById("dniUsuarioP").value;
+    const nombre = document.getElementById("nombreUsuarioP").value;
+    const apellido = document.getElementById("apellidoUsuarioP").value;
+    const email = document.getElementById("emailUsuarioP").value;
+    const rol = document.getElementById("rolP").value;
+    const contrasena = document.getElementById("contraseñaUsuarioP").value;
+    const repetirContrasena = document.getElementById("repetirContraseñaUsuarioP").value;
+
+    // Validar que las contraseñas coincidan
+    if (contrasena !== repetirContrasena) {
+        alert("Las contraseñas no coinciden.");
+        return;
+    }
+
+    try {
+        // Verificar si el DNI ya está registrado
+        const response = await fetch(`/dashboard_jmedico/cuentas/validar-dni?dni=${dni}`);
+        const { existe } = await response.json();
+
+        if (existe) {
+            alert("El DNI ya está registrado.");
+            return;
+        }
+
+        // Enviar los datos al servidor
+        const responseGuardar = await fetch('/dashboard_jmedico/cuentas/guardar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                dni,
+                nombre,
+                apellido,
+                email,
+                rol,
+                contrasena
+            })
+        });
+
+        const result = await responseGuardar.json();
+
+        if (result.success) {
+            alert(result.mensaje);
+            document.getElementById("modalPaciente").classList.remove("show");
+            cargarPacientes();
+        } else {
+            alert(result.mensaje);
+        }
+    } catch (error) {
+        console.error("Error al guardar paciente:", error);
+        alert("Error al guardar paciente");
+    }
+});
+
+// Función para cargar pacientes
+async function cargarPacientes() {
+    try {
+        const response = await fetch(`/dashboard_jmedico/cuentas/buscar`);
+        const pacientes = await response.json();
+        actualizarTabla(pacientes);
+    } catch (error) {
+        console.error("Error al cargar pacientes:", error);
+    }
+}
+
+    
+    // Llamada inicial para cargar usuarios al inicio
+    cargarUsuarios();
+});
+
+    </script>
+    
+
+
+<%- include('../_partials/footer') %>

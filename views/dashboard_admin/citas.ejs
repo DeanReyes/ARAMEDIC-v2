@@ -1,0 +1,475 @@
+<%- include('../_partials/header') %>
+
+<div class="dashboard-container">
+    <%- include('../_partials/sidebar') %>
+
+    <!-- Contenido Principal -->
+    <main id="main-content">
+        <%- include('../_partials/sub_header') %>
+        <!-- Lista de Notificaciones -->
+        <%- include('../_partials/notificaciones') %>
+
+        <div class="main-content">
+            <h2 class="section-title">Citas Médicas</h2>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar cita...">
+            </div>
+
+            <!-- <button id="btnAgregarCitas" class="add-button">
+                <i class="fas fa-plus-circle"></i> Agendar Cita
+            </button> -->
+
+            <div class="table-container">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead style="background-color: #007BFF; color: white;">
+                        <tr>
+                            <th style="padding: 10px; text-align: left;">Paciente</th>
+                            <th style="padding: 10px; text-align: left;">Médico</th>
+                            <th style="padding: 10px; text-align: left;">Servicio</th>
+                            <th style="padding: 10px; text-align: left;">Fecha</th>
+                            <th style="padding: 10px; text-align: left;">Hora de Inicio</th>
+                            <th style="padding: 10px; text-align: left;">Estado</th>
+                            <th style="padding: 10px; text-align: left;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCitas">
+                        <% if (Array.isArray(citas) && citas.length > 0) { %>
+                            <% citas.forEach(cita => { %>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 10px;"><%= cita.nombre_paciente %> <%= cita.apellido_paciente %></td>
+                                    <td style="padding: 10px;"><%= cita.nombre_medico %> <%= cita.apellido_medico %></td>
+                                    <td style="padding: 10px;"><%= cita.nombre_servicio %></td>
+                                    <td style="padding: 10px;" class="fecha-cita" data-fecha="<%= cita.fecha %>"><%= cita.fecha %></td>
+                                    <td style="padding: 10px;"><%= cita.hora %></td>
+                                    <td style="padding: 10px;"><%= cita.estado %></td>
+                                    <td style="padding: 10px;">
+                                        <button class="btn-editar" style="padding: 5px 10px; background-color: #ffc107; color: white; border: none; border-radius: 4px; cursor: pointer;" 
+                                        data-id="<%= cita.id %>"
+                                        data-nombre-paciente="<%= cita.nombre_paciente %>"
+                                        data-apellido-paciente="<%= cita.apellido_paciente %>"
+                                        data-nombre-medico="<%= cita.nombre_medico %>"
+                                        data-apellido-medico="<%= cita.apellido_medico %>"
+                                        data-nombre_servicio="<%= cita.nombre_servicio %>"
+                                        data-fecha="<%= cita.fecha %>"
+                                        data-hora="<%= cita.hora %>"
+                                        data-estado="<%= cita.estado %>"
+                                        >Editar</button>
+                                        <button class="btn-eliminar" style="padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;" data-id="<%= cita.id %>">Eliminar</button>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 10px;">No hay citas disponibles.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <section id="formularioCita" style="display: none;">
+            <%- include('../_partials/notificaciones') %>
+            <%- include('../_partials/modal') %>
+            <section id="patient-service-selection">
+                <h2 class="section-title">Selecciona Paciente y Servicio</h2>
+                    <div class="form-group">
+                    <label for="patient">Selecciona un Paciente:</label>
+                    <select id="patient" name="patient_id" required>
+                        <option value="">Selecciona un Paciente</option>
+                        <% pacientes.forEach(paciente => { %>
+                            <option value="<%= paciente.id %>">
+                                <%= paciente.nombre %> <%= paciente.apellido %>
+                            </option>
+                        <% }); %>
+                    </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="service">Selecciona un Servicio:</label>
+                        <select id="service" name="service" required>
+                            <option value="">Selecciona un Servicio</option>
+                            <% servicios.forEach(cita => { %>
+                                <option value="<%= cita.id %>">
+                                    <%= cita.nombre %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <button id="nextBtn" class="btn btn-primary">Siguiente</button>
+            </form>
+        </section>
+        <section id="calendario" style="display:none">
+            <h2 class="section-title">Solicitar Cita</h2>
+            <!-- Contenido del calendario -->
+            <div class="container">
+                <div class="calendar">
+                    <div class="header">
+                        <div class="month"></div>
+                        <div class="btns">
+                            <div class="btn today-btn">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </div>
+                            <div class="btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weekdays">
+                        <div class="day">Dom</div>
+                        <div class="day">Lun</div>
+                        <div class="day">Mar</div>
+                        <div class="day">Mie</div>
+                        <div class="day">Jue</div>
+                        <div class="day">Vie</div>
+                        <div class="day">Sab</div>
+                    </div>
+                    <div class="days"></div>
+                </div>
+                <a href="/dashboard_jmedico/citas" id="backBtn" class="btn btn-primary">Regresar</a>
+            </div>
+        </section>
+        </section>
+    </main>
+</div>
+
+<!-- Modal para añadir/editar cita -->
+<div id="modalCita" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Añadir Cita</h2>
+        <form id="formCita">
+            <input type="text" id="id" name="id" hidden>
+            <div class="form-group">
+                <label for="nombrepac">Nombre del Paciente</label>
+                <select id="pacienteId" name="pacienteId" required>
+                    <option value="">Seleccione un paciente</option>
+                    <% pacientes.forEach(function (paciente) { %>
+                        <option value="<%= paciente.id%>"><%= paciente.nombre %> <%= paciente.apellido %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nombremed">Nombre del Médico</label>
+                <select id="medicoId" name="medicoId" required>
+                    <option value="">Seleccione un médico</option>
+                    <% medicos.forEach(function(medico) { %>
+                        <option value="<%= medico.id %>"><%= medico.nombre %> <%= medico.apellido %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="costo">Servicio</label>
+                <select id="tservicio" name="tservicio" required>
+                    <option value=""></option>
+                    <% servicios.forEach(servicio => { %>
+                        <option value="<%= servicio.id %>">
+                            <%= servicio.nombre %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tiempo_duracion">Fecha</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+            <div class="form-group">
+                <label for="tiempo_recuperacion">Hora</label>
+                <input type="time" id="hora" name="hora" required>
+            </div>
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado">
+                    <option value="confirmada">confirmada</option>
+                    <option value="cancelada">cancelada</option>
+                    <option value="pendiente">pendiente</option>
+                </select>
+            </div>
+            <button type="submit" id="btnGuardar" class="btn-guardar">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const tablaCitas = document.getElementById("tablaCitas");
+    const btnAgregarServicio = document.getElementById("btnAgregarServicio");
+    const modal = document.getElementById("modalCita");
+    const closeModal = document.querySelector(".close");
+    const formServicio = document.getElementById("formServicio");
+    const btnGuardar = document.getElementById("btnGuardar");
+    const patientSelect = document.getElementById('patient');
+    const serviceSelect = document.getElementById('service');
+    const modalCalendario = document.getElementById("myModal");
+    const closeModalCalendarioBtn = document.getElementsByClassName("close-calentario")[0];
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnAgregarCitas = document.getElementById("btnAgregarCitas");
+        const formularioCita = document.getElementById("formularioCita");
+        const tablaCitas = document.querySelector(".table-container");
+        const searchContainer = document.querySelector(".search-container");
+        const sectionTitle = document.querySelector(".section-title");
+        btnAgregarCitas.addEventListener("click", () => {
+            // Ocultar elementos
+            tablaCitas.style.display = "none";
+            searchContainer.style.display = "none";
+            btnAgregarCitas.style.display = "none";
+            formularioCita.style.display = "block";
+            sectionTitle.style.display = "none";
+        });
+        regresarBtn.addEventListener("click", () => {
+            formularioCita.style.display = "none";
+            tablaCitas.style.display = "block";
+        });
+    });
+    // Función para formatear la fecha
+    function formatDate(date) {
+        const d = new Date(date);
+        const day = d.getDate().toString().padStart(2, '0');
+        const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Mes empieza desde 0
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    // Formatear las fechas en la tabla
+    document.querySelectorAll('.fecha-cita').forEach(element => {
+        const rawDate = element.getAttribute('data-fecha');
+        element.textContent = formatDate(rawDate);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        if (patientSelect.value && serviceSelect.value) {
+            document.getElementById('patient-service-selection').style.display = 'none';
+            document.getElementById('calendario').style.display = 'block';
+        } else {
+            Swal.fire({
+                icon:"error",
+                title:"Error!",
+                text:"Eliga un medico y un servicio primero para continuar",
+            });
+        }
+    });
+    function openModalCalendario(date) {
+        fecha = date;
+        const currentDate = new Date(date);
+        // Formatear la fecha en el formato deseado (por ejemplo, DD/MM/YYYY)
+        const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${
+            (currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
+            
+        // Mostrar la fecha formateada en el modal
+        document.getElementById('current-date-modal').innerText = formattedDate;
+        modalCalendario.classList.add('active');
+    }
+    function closeModalCalentario() {
+        modalCalendario.classList.remove('active');
+    }
+    function saveModalCalentar(){
+        Swal.fire({
+        title: "¿Deseas guardar tu cita?",
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        denyButtonText: `No`
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                fetchSaveCita();
+            } 
+        });
+    }
+    async function fetchSaveCita(){
+        if(hora.trim().length === 0){
+            Swal.fire({
+                title: "The Internet?",
+                text: "That thing is still around?",
+                icon: "warning"
+            });
+            return;
+        }
+        const lastDate = new Date(fecha);
+        // Dividir `hora` en horas, minutos y segundos (asumiendo que `hora` tiene formato "HH:mm" o "HH:mm:ss")
+        const [hours, minutes, seconds = 0] = hora.split(":").map(Number);
+        // Crear `dataTime` usando los valores específicos
+        const dataTime = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate(), hours, minutes, seconds);
+        // Obtener los valores de `dataTime`
+        const year = dataTime.getFullYear();
+        const month = dataTime.getMonth() + 1; // Sumar 1 porque `getMonth()` devuelve un valor de 0 a 11
+        const date = dataTime.getDate();
+        const formattedHours = String(dataTime.getHours()).padStart(2, '0'); // Formato de dos dígitos
+        const formattedMinutes = String(dataTime.getMinutes()).padStart(2, '0');
+        const formattedSeconds = String(dataTime.getSeconds()).padStart(2, '0');
+        const registrarfecha = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
+        const registrarhora = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+        // Construir el objeto `data` 
+        const data = {
+            "paciente_id": patientSelect.value,
+            "servicio_id": serviceSelect.value,
+            "fecha": registrarfecha, // Formato AAAA-MM-DD
+            "hora": registrarhora, // Formato HH:mm:ss
+        };
+        try{
+            const response = await fetch('/dashboard_admin/citas', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+                });
+                closeModalCalentario();
+                if (!response.ok){
+                    console.log(response)
+                    throw new Exception("se genero un problema");
+                }
+                Swal.fire({
+                title: "Su cita ha sido registrada",
+                text: "Redirigiendo al inicio",
+                icon: "success"
+            }).then(()=>{
+                window.location.href = '/dashboard_admin';
+            });
+        }catch(error){
+            Swal.fire({
+                title: "The Internet?",
+                text: "ya consulta ya existe",
+                icon: "warning"
+            });
+        }finally{
+            hora = fecha = "";
+            // Obtén todos los botones en la cuadrícula de fechas
+        const buttons = document.querySelectorAll('.date-item');
+            
+        // Remueve la clase 'active' de todos los botones
+        buttons.forEach(button => button.classList.remove('active'));
+        }
+    }
+    function selectModalTimeGrid(event) {
+        // Obtén todos los botones en la cuadrícula de fechas
+        const buttons = document.querySelectorAll('.date-item');
+            
+        // Remueve la clase 'active' de todos los botones
+        buttons.forEach(button => button.classList.remove('active'));
+            
+        // Añade la clase 'active' al botón que fue clicado
+        const selectedButton = event.target;
+        selectedButton.classList.add('active');
+        // Obtén el ID y el valor (texto) del botón seleccionado
+        const buttonId = selectedButton.id;
+        const buttonValue = selectedButton.textContent;
+        hora = buttonValue;
+        // Muestra el ID y el valor en la consola (o úsalo como necesites)
+        console.log("ID del botón seleccionado:", buttonId);
+        console.log("Valor del botón seleccionado:", buttonValue);
+    }
+
+    
+    
+    
+     // Asignar evento de clic en los botones de editar dentro de cada fila de la tabla
+     tablaCitas.addEventListener("click", function (event) {
+        if (event.target && event.target.matches(".btn-editar")) {
+
+            console.log("prueba")
+            console.log(event.target.dataset)
+            console.log(new Date(event.target.dataset.fecha))
+            
+            const cita = event.target.dataset;
+
+            const date = new Date(cita.fecha);
+            const formattedDate = date.toISOString().split('T')[0];
+
+            document.getElementById("id").value = cita.id;
+            document.getElementById("fecha").value = formattedDate;
+            document.getElementById("hora").value = cita.hora;
+
+            modal.classList.add("show");
+        }
+    });
+
+    document.getElementById("formCita").addEventListener("submit", async (event) => {
+        event.preventDefault(); // Previene el envío tradicional del formulario.
+
+        // Obtén el formulario como un objeto FormData
+        const formData = new FormData(event.target);
+
+        // Convierte FormData en un objeto JSON
+        const formDataObject = Object.fromEntries(formData.entries());
+
+        // Envía los datos con fetch
+        try {
+            const response = await fetch("/dashboard_admin/citas/guardar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formDataObject),
+            });
+
+            // Maneja la respuesta
+            if (response.ok) {
+            const data = await response.json();
+            console.log("Respuesta del servidor:", data.mensaje);
+            alert(data.mensaje);
+            location.reload();
+            } else {
+                alert("No se pudo...");
+            }
+        } catch (error) {
+            alert("No se pudo..");
+            console.error("Error de red:", error);
+        }
+    });
+
+    // Cerrar el modal
+    closeModal.addEventListener("click", () => {
+        modal.classList.remove("show");
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.classList.remove("show");
+        }
+    });
+
+    // Cerrar el modal con la tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModalCalentario();
+        }
+    });
+});
+
+tablaCitas.addEventListener("click", async function (event) {
+        if (event.target && event.target.matches(".btn-eliminar")) {
+            const id = event.target.dataset.id;
+            // const nombreCita = event.target.dataset.nombre;
+
+            if (confirm(`¿Estás seguro de que deseas eliminar esta cita?`)) {
+                try {
+                    console.log("Intentando eliminar cita con ID:", id);
+                    const response = await fetch(`/dashboard_admin/citas/eliminar/${id}`, {
+                        method: "DELETE",
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert(result.mensaje);
+                        location.reload(); // Recargar la página para actualizar la tabla
+                    } else {
+                        alert(result.mensaje);
+                    }
+                } catch (error) {
+                    console.error("Error al eliminar la cita:", error);
+                    alert("Error al eliminar la cita.");
+                }
+            }
+        }
+    });
+
+</script>
+
+<%- include('../_partials/footer') %>

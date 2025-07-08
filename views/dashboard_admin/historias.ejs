@@ -1,0 +1,80 @@
+<%- include('../_partials/header') %>
+
+<div class="dashboard-container">
+    <%- include('../_partials/sidebar') %>
+
+    <!-- Contenido Principal -->
+    <main id="main-content">
+        <%- include('../_partials/sub_header') %>
+        <!-- Lista de Notificaciones -->
+        <%- include('../_partials/notificaciones') %>
+
+        <div class="main-content">
+            <h2 class="title">Historia clínica</h2>
+
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por DNI, nombre, etc.">
+            </div>
+            <button id="btnAgregarServicio" class="add-button" onclick="window.location.href='/dashboard_admin/registrar_historia_clinica'">
+                <i class="fas fa-plus-circle"></i> Añadir Historia
+            </button>
+            <button id="btnGenerarZip" class="add-button" onclick="location.href='/dashboard_admin/historias/descargar_todos_pdf'">
+                <i class="fas fa-file-archive"></i> Generar ZIP
+            </button>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre y apellido</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Motivo de Consulta</th>
+                            <th>Cirugía</th>
+                            <th>Procedimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaServicios">
+                        <!-- Los datos de usuarios se insertarán aquí dinámicamente -->
+                        <% if (historias && historias.length > 0) { %>
+                            <% historias.forEach(function(historia) { %>
+                                <tr>
+                                    <td><%= historia.dni %></td>
+                                    <td><%= historia.nombre_paciente %> <%= historia.apellido_paciente %></td>
+                                    <td><%= historia.telefono || 'No especificado' %></td>
+                                    <td><%= historia.email || 'No especificado' %></td>
+                                    <td><%= historia.motivo || 'No especificado' %></td>
+                                    <td><%= historia.cirugia || 'No especificado' %></td>
+                                    <td><%= historia.procedimiento || 'No especificado' %></td>
+                                    <td>
+                                        <!-- Botones para editar o eliminar historia -->
+                                        <form action="/dashboard_admin/historia_clinica" method="GET" style="display: inline;">
+                                            <input type="hidden" name="historiaId" value="<%= historia.id %>">
+                                            <button type="submit" class="btn-editar" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">
+                                                Editar
+                                            </button>
+                                        </form>
+                                        <!-- <button class="btn-eliminar" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                                            Eliminar
+                                        </button> -->
+                                        <!-- Boton para descargar PDF -->
+                                         <button onclick="location.href='/dashboard_admin/historias/descargar_pdf/<%= historia.id %>'" class="btn-descargar" style="background-color: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                                            Descargar
+                                         </button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="8">No se encontraron registros.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('../_partials/footer') %>

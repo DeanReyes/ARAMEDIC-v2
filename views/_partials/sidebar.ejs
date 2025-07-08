@@ -1,0 +1,117 @@
+        <!-- Sidebar para navegación -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-icons">
+                    <a href="#menu" id="hamburger-menu" class="icon-link hamburger-menu" aria-label="Menu">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                    <a href="#notificaciones" class="icon-link notification-bell" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>                        
+                    </a>
+                    <a href="#perfil" class="icon-link" aria-label="Perfil de usuario">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                </div>
+                <img src="/imgs/Medico.jpg" alt="Logo de la clínica" class="clinic-logo">
+                <% if (usuario.rol == 1) { %>  <!-- Paciente -->
+                    <div class="doctor-info">
+                        <p class="doctor-name"><%= usuario.nom %> <%= usuario.ape %></p>
+                        <p class="doctor-email"><%= usuario.cor %></p>                        
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="/dashboard_paciente"><i class="fas fa-calendar"></i> Ver Calendario</a></li>
+                        <li><a href="/dashboard_paciente/PERFIL"><i class="fas fa-calendar"></i> Perfil</a></li>
+                        <li><a href="/dashboard_paciente/solicitar_consulta"><i class="fas fa-calendar"></i> Solicitar Consulta</a></li>
+                        <li><a href="/dashboard_paciente/historia_clinica"><i class="fas fa-file-medical"></i> Historia Clínica</a></li>
+                        <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                    </ul>
+                <% } else if (usuario.rol == 3) { %>  <!-- Administrador -->
+                    <div class="doctor-info">
+                        <p class="doctor-name">Administrador <%= usuario.nom %> <%= usuario.ape %></p>
+                        <p class="doctor-email"><%= usuario.cor %></p>                        
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="/dashboard_admin"><i class="fas fa-calendar"></i><span> Gestionar Calendario</span></a></li>
+                        <li><a href="/dashboard_admin/citas"><i class="fas fa-calendar-check"></i><span> Citas médicas</span></a></li>
+                        <li><a href="/dashboard_admin/historias"><i class="fas fa-file-medical"></i><span> Historias clínicas</span></a></li>
+                        <li><a href="/dashboard_admin/cuentas"><i class="fas fa-users"></i><span> Cuentas y trabajadores</span></a></li>
+                        <li><a href="/dashboard_admin/servicios"><i class="fas fa-briefcase-medical"></i><span> Servicios</span></a></li>
+                        <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                    </ul>
+                <% } else { %>  <!-- Médico -->
+                    <div class="doctor-info">
+                        <p class="doctor-name">Dr. <%= usuario.nom %> <%= usuario.ape %></p>
+                        <p class="doctor-email"><%= usuario.cor %></p>                        
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="/dashboard_jmedico"><i class="fas fa-calendar"></i><span> Gestionar Calendario</span></a></li>
+                        <li><a href="/dashboard_jmedico/citas"><i class="fas fa-calendar-check"></i><span> Citas médicas</span></a></li>
+                        <li><a href="/dashboard_jmedico/historias"><i class="fas fa-file-medical"></i><span> Historias clínicas</span></a></li>
+                        <!-- <li><a href="/dashboard_jmedico/cuentas"><i class="fas fa-users"></i><span> Cuentas y trabajadores</span></a></li> -->
+                        <!-- <li><a href="/dashboard_jmedico/servicios"><i class="fas fa-briefcase-medical"></i><span> Servicios</span></a></li> -->
+                        <li><a href="/logout"><i class="fas fa-sign-out-alt"></i><span> Cerrar sesión</span></a></li>
+                    </ul>
+                <% } %>         
+            </div>
+
+       <!-- Implementar validación y protección de rutas según tipo de usuario -->
+                
+
+        </nav>
+
+
+    <!-- Navegación móvil -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-icons">
+            <a href="#" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </a>
+            <a href="#notificaciones" aria-label="Notificaciones">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count"></span>
+            </a>
+            <a href="#perfil" aria-label="Perfil">
+                <i class="fas fa-user-circle"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Barra lateral móvil -->
+    <div class="mobile-sidebar">
+
+
+        <% if (usuario.rol==1) { %>
+            <span class="mobile-sidebar-close">&times;</span>
+            <div class="mobile-doctor-info">
+                <!-- <img src="/imgs/Medico.jpg" alt="Foto del doctor" class="mobile-doctor-photo"> -->
+                <p class="mobile-doctor-name"><%= usuario.nom %> <%= usuario.ape %></p>
+                <p class="mobile-doctor-email"><%= usuario.cor %></p>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li><a href="/dashboard_paciente"><i class="fas fa-calendar"></i> Ver Calendario</a></li>
+                <li><a href=""><i class="fas fa-calendar"></i>Solicitar Consulta</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                
+            </ul>
+            
+        <% } else { %>
+            <span class="mobile-sidebar-close">&times;</span>
+            <div class="mobile-doctor-info">
+                <img src="/imgs/Medico.jpg" alt="Foto del doctor" class="mobile-doctor-photo">
+                <p class="mobile-doctor-name">Dr <%= usuario.nom %> <%= usuario.ape %></p>
+                <p class="mobile-doctor-email"><%= usuario.cor %></p>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="/dashboard_jmedico"><i class="fas fa-calendar"></i><span>Gestionar Calendario</span> </a></li>
+                <li><a href="/dashboard_jmedico/citas"><i class="fas fa-calendar-check"></i> <span>Citas médicas</span></a></li>
+                <li><a href="/dashboard_jmedico/historias"><i class="fas fa-file-medical"></i> <span>Historias clínicas</span></a></li>
+                <li><a href="/dashboard_jmedico/cuentas"><i class="fas fa-users"></i> <span>Cuentas y trabajadores</span></a></li>
+                <li><a href="/dashboard_jmedico/servicios"><i class="fas fa-briefcase-medical"></i> <span>Servicios</span></a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Cerrar sesión</span></a></li>
+            </ul>
+            
+        <% } %>
+
+    </div>

@@ -1,0 +1,294 @@
+<%- include('../_partials/header') %>
+<div class="dashboard-container">
+    <%- include('../_partials/sidebar') %>
+
+    <!-- Contenido Principal -->
+    <main id="main-content">
+        <%- include('../_partials/sub_header') %>
+        <!-- Lista de Notificaciones -->
+        <%- include('../_partials/notificaciones') %>
+
+        <div class="main-content">
+            <h2 class="title">Gestión de Servicios</h2>
+
+            <!-- Barra de Búsqueda -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar servicios...">
+            </div>
+            <button id="btnAgregarServicio" class="add-button">
+                <i class="fas fa-plus-circle"></i> Añadir Servicio
+            </button>
+
+            <!-- Tabla de Servicios -->
+            <div class="table-container">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead style="background-color: #007BFF; color: white;">
+                        <tr>
+                            <th style="padding: 10px; text-align: left;">Id</th>
+                            <th style="padding: 10px; text-align: left;">Nombre</th>
+                            <th style="padding: 10px; text-align: left;">Descripcion</th>
+                            <th style="padding: 10px; text-align: left;">Costo</th>
+                            <th style="padding: 10px; text-align: left;">Duración</th>
+                            <th style="padding: 10px; text-align: left;">Recuperación</th>
+                            <th style="padding: 10px; text-align: left;">Estado</th>
+                            <th style="padding: 10px; text-align: center;">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaServicios">
+                        <% servicios.forEach(servicio => { %>
+                            <tr style="border-bottom: 1px solid #ddd;">
+                                <td style="padding: 10px;"><%= servicio.id%></td>
+                                <td style="padding: 10px;"><%= servicio.nombre%></td>
+                                <td style="padding: 10px;"><%= servicio.descripcion %></td>
+                                <td style="padding: 10px;">S/.<%= servicio.costo %></td>
+                                <td style="padding: 10px;"><%= servicio.tiempo_duracion %> min</td>
+                                <td style="padding: 10px;"><%= servicio.tiempo_recuperacion %> días</td>
+                                <td style="padding: 10px;"><%= servicio.estado %></td>
+                                <td style="padding: 10px;">
+                                    <button class="btn-editar" style="padding: 5px 10px; background-color:
+                                     #ffc107; color: white; border: none; border-radius: 4px; cursor: pointer;"
+                                     data-id="<%= servicio.id %>"
+                                     data-nombre="<%= servicio.nombre %>"
+                                     data-descripcion="<%= servicio.descripcion %>"
+                                     data-costo="<%= servicio.costo %>"
+                                     data-tiempo_duracion="<%= servicio.tiempo_duracion %>"
+                                     data-tiempo_recuperacion="<%= servicio.tiempo_recuperacion %>"
+                                     data-estado="<%= servicio.estado %>"
+                                     >Editar</button>
+                                    <button class="btn-eliminar"
+                                    data-id="<%= servicio.id %>" 
+                                    data-nombre="<%= servicio.nombre %>" 
+                                        style="padding: 5px 10px; background-color: #dc3545; color: white; 
+                                        border: none; border-radius: 4px; cursor: pointer;">Eliminar</button>
+                                    </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal para añadir/editar servicio -->
+<div id="modalServicio" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Añadir Servicio</h2>
+        <form id="formServicio">
+            <input type="text" id="id" name="id" hidden>
+            <div class="form-group">
+                <label for="nombre">Nombre del Servicio</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="tipoProcedimiento">Descripcion</label>
+                <input type="text" id="descripcion" name="descripcion" required>
+            </div>
+            <div class="form-group">
+                <label for="costo">Costo</label>
+                <input type="number" id="costo" name="costo" required>
+            </div>
+            <div class="form-group">
+                <label for="tiempo_duracion">Duración (minutos)</label>
+                <input type="number" id="tiempo_duracion" name="tiempo_duracion" required>
+            </div>
+            <div class="form-group">
+                <label for="tiempo_recuperacion">Recuperación (días)</label>
+                <input type="number" id="tiempo_recuperacion" name="tiempo_recuperacion" required>
+            </div>
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado">
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+            </div>
+            <button type="submit" id="btnGuardar" class="btn-guardar">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const tablaServicios = document.getElementById("tablaServicios");
+    const btnAgregarServicio = document.getElementById("btnAgregarServicio");
+    const modal = document.getElementById("modalServicio");
+    const closeModal = document.querySelector(".close");
+    const formServicio = document.getElementById("formServicio");
+    const btnGuardar = document.getElementById("btnGuardar");
+
+    // Funcionalidad de búsqueda en tiempo real
+    searchInput.addEventListener("input", async function () {
+        const nombre = searchInput.value.trim();
+
+        try {
+            const response = await fetch(`/dashboard_jmedico/servicios/buscar?nombre=${encodeURIComponent(nombre)}`);
+            const servicios = await response.json();
+
+            // Limpia la tabla
+            tablaServicios.innerHTML = "";
+
+            // Muestra los resultados
+            servicios.forEach(servicio => {
+                const row = `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;">${servicio.nombre}</td>
+                        <td style="padding: 10px;">${servicio.descripcion}</td>
+                        <td style="padding: 10px;">${servicio.costo}</td>
+                        <td style="padding: 10px;">${servicio.tiempo_duracion} min</td>
+                        <td style="padding: 10px;">${servicio.tiempo_recuperacion} días</td>
+                        <td style="padding: 10px;">
+                            <button class="btn-editar" style="padding: 5px 10px; background-color: #ffc107; color: white; border: none; border-radius: 4px; cursor: pointer;">Editar</button>
+                            <button style="padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+                tablaServicios.insertAdjacentHTML("beforeend", row);
+            });
+        } catch (error) {
+            console.error("Error al buscar servicios:", error);
+        }
+    });
+
+    // Mostrar el modal para añadir servicio
+    btnAgregarServicio.addEventListener("click", () => {
+        document.getElementById("modalTitle").textContent = "Añadir Servicio";
+        formServicio.reset();
+        modal.classList.add("show");
+    });
+
+    // Función para abrir el modal en modo edición con los datos cargados
+    function abrirModalEditar(servicio) {
+        document.getElementById("modalTitle").textContent = "Editar Servicio";
+        document.getElementById("id").value = servicio.id;
+        document.getElementById("nombre").value = servicio.nombre;
+        document.getElementById("descripcion").value = servicio.descripcion;
+        document.getElementById("costo").value = servicio.costo;
+        document.getElementById("tiempo_duracion").value = servicio.tiempo_duracion;
+        document.getElementById("tiempo_recuperacion").value = servicio.tiempo_recuperacion;
+        document.getElementById("estado").value = servicio.estado
+        modal.classList.add("show");
+    }
+
+    // Asignar evento de clic en los botones de editar dentro de cada fila de la tabla
+    tablaServicios.addEventListener("click", function (event) {
+        if (event.target && event.target.matches(".btn-editar")) {
+
+            console.log(event.target.dataset.estado)
+
+            const servicio = {
+                id: event.target.dataset.id,
+                nombre: event.target.dataset.nombre,
+                descripcion: event.target.dataset.descripcion,
+                costo: event.target.dataset.costo,
+                tiempo_duracion: event.target.dataset.tiempo_duracion,
+                tiempo_recuperacion: event.target.dataset.tiempo_recuperacion,
+                estado: event.target.dataset.estado
+            };
+            abrirModalEditar(servicio);
+        }
+    });
+
+    // Cerrar el modal
+    closeModal.addEventListener("click", () => {
+        modal.classList.remove("show");
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.classList.remove("show");
+        }
+    });
+
+    // Guardar o actualizar servicio
+    document.getElementById("formServicio").addEventListener("submit", async (event) => {
+    event.preventDefault(); // Previene el envío tradicional del formulario.
+
+    // Obtén los valores de los campos
+    const nombre = document.getElementById("nombre").value.trim();
+    const descripcion = document.getElementById("descripcion").value.trim();
+
+    // Expresión regular para validar que no contenga números
+    const sinNumeros = /^[^0-9]*$/;
+
+    // Validación de los campos
+    if (!sinNumeros.test(nombre)) {
+        alert("El campo 'nombre' no puede contener números.");
+        return; // Detenemos el envío
+    }
+
+    if (!sinNumeros.test(descripcion)) {
+        alert("El campo 'descripción' no puede contener números.");
+        return; // Detenemos el envío
+    }
+
+    // Obtén el formulario como un objeto FormData
+    const formData = new FormData(event.target);
+
+    // Convierte FormData en un objeto JSON
+    const formDataObject = Object.fromEntries(formData.entries());
+
+    // Envía los datos con fetch
+    try {
+        const response = await fetch("/dashboard_jmedico/servicios/guardar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formDataObject),
+        });
+
+        // Maneja la respuesta
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Respuesta del servidor:", data.mensaje);
+            alert(data.mensaje);
+            location.reload();
+        } else {
+            alert("No se pudo guardar el servicio.");
+        }
+    } catch (error) {
+        alert("Hubo un error en la red.");
+        console.error("Error de red:", error);
+    }
+});
+
+
+
+});
+
+tablaServicios.addEventListener("click", async function (event) {
+    if (event.target && event.target.matches(".btn-eliminar")) {
+        const id = event.target.dataset.id;
+        const nombreServicio = event.target.dataset.nombre;
+
+        if (confirm(`¿Estás seguro de que deseas eliminar el servicio "${nombreServicio}"?`)) {
+            try {
+                const response = await fetch(`/dashboard_jmedico/servicios/eliminar/${id}`, {
+                    method: "DELETE",
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.mensaje);
+                    location.reload(); // Recargar la página para actualizar la tabla
+                } else {
+                    alert(result.mensaje);
+                }
+            } catch (error) {
+                console.error("Error al eliminar el servicio:", error);
+                alert("Error al eliminar el servicio.");
+            }
+        }
+    }
+});
+
+
+    </script>
+    
+
+<%- include('../_partials/footer') %>

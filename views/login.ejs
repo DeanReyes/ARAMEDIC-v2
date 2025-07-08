@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ARAMEDIC</title>
+    <link rel="stylesheet" href="/styles-login.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Iconos -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .error-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .error-list {
+            list-style: none;
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body>
+    <section class="container_forms">
+        <div class="form login">
+            <div class="form-content">
+                <header>
+                    <div class="logo">
+                        <span class="highlight">ARA</span>MEDIC
+                    </div>
+                </header>
+                <p>Iniciar sesión</p>
+
+                <!-- Mostrar errores si existen -->
+                <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                    <div class="error-box">
+                        <ul class="error-list">
+                            <% errors.forEach(function(error) { %>
+                                <li><%= error.msg %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                <% } %>
+
+                <% if (mensaje) { %>
+                    <div class="error-box">
+                        <ul class="error-list">
+                            <li><%= mensaje %></li>
+                        </ul>
+                    </div>
+                <% } %>
+
+                <form action="/login" method="POST">
+
+                    <div class="field input-field">
+                        <label for="username">DNI</label>
+                        <input type="text" name="dni" placeholder="Ingresa tu DNI" value="<%= oldData ? oldData.dni : '' %>" required>
+                    </div>  
+                    <div class="field input-field">
+                        <label for="password">Contraseña</label>
+                        <input type="password" name="contra" id="password" placeholder="Ingresa tu contraseña" required>
+                        <i class="bx bx-hide eye-icon"></i>
+                    </div>                    
+                    <div class="field button-field">
+                        <button type="submit">Iniciar Sesión</button>
+                    </div>
+                    <div class="form-link forgot-password">
+                        <span>¿Olvidaste tu contraseña?</span>
+                        <a href="/recuperarcuentaU" class="forgot-pass">Recuperar mi Cuenta</a>
+                    </div>
+                    <div class="form-link register-section">
+                        <span>¿No tienes una cuenta?<a href="/registroU" class="register"> Regístrate</a></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- <script src="script-login.js"></script>-->
+    <script>
+        const passwordField = document.querySelector("#password");
+        const eyeIcon = document.querySelector(".eye-icon");
+    
+        eyeIcon.addEventListener("click", () => {
+            const isPassword = passwordField.getAttribute("type") === "password";
+            passwordField.setAttribute("type", isPassword ? "text" : "password");
+            eyeIcon.classList.toggle("bx-show");
+            eyeIcon.classList.toggle("bx-hide");
+        });
+    </script>
+    
+</body>
+</html>

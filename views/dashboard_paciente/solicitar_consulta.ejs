@@ -1,0 +1,296 @@
+<%- include('../_partials/header') %>
+<div class="dashboard-container">
+    <%- include('../_partials/sidebar') %>
+    <!-- Contenido Principal -->
+    <main id="main-content">
+        <%- include('../_partials/sub_header') %>
+        <!-- Lista de Notificaciones -->
+        <%- include('../_partials/notificaciones') %>
+        <%- include('../_partials/modal') %>
+        <section id="doctor-service-selection">
+            <h2 class="section-title">Selecciona Doctor y Servicio</h2>
+                <div class="form-group">
+                    <label for="medico">Selecciona un Doctor:</label>
+                    <select id="medico" name="medico" required>
+                        <option value="">Selecciona un Doctor</option>
+                        <% medico_servicios.forEach(medico => { %>
+                            <option value="<%= medico.medico_id %>">
+                                <%= medico.medico_nombre %> <%= medico.medico_apellido %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="servicio">Selecciona un Servicio:</label>
+                    <select id="servicio" name="servicio" required disabled>
+                        <option value="">Selecciona un Servicio</option>
+                        <!-- Este select se llenará dinámicamente con los servicios correspondientes al médico seleccionado -->
+                    </select>
+                </div>
+
+                <button id="nextBtn" class="btn btn-primary">Siguiente</button>
+            </form>
+        </section>
+
+        <!-- Calendario Section -->
+        <section id="calendario" style="display:none">
+            <h2 class="section-title">Solicitar Cita</h2>
+            <!-- Contenido del calendario -->
+            <div class="container">
+                <div class="calendar">
+                    <div class="header">
+                        <div class="month"></div>
+                        <div class="btns">
+                            <div class="btn today-btn">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </div>
+                            <div class="btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weekdays">
+                        <div class="day">Dom</div>
+                        <div class="day">Lun</div>
+                        <div class="day">Mar</div>
+                        <div class="day">Mie</div>
+                        <div class="day">Jue</div>
+                        <div class="day">Vie</div>
+                        <div class="day">Sab</div>
+                    </div>
+                    <div class="days"></div>
+                </div>
+                <a href="/dashboard_paciente/solicitar_consulta" id="backBtn" class="btn btn-primary">Regresar</a>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    const medicoSelect = document.getElementById('medico');
+    const servicioSelect = document.getElementById('servicio');
+    const medicoServicios = <%- JSON.stringify(medico_servicios) %>;
+    medicoSelect.addEventListener('change', function(){
+        servicioSelect.innerHTML = '<option value="">Selecciona un Servicio</option>';
+        if (this.value) {
+            servicioSelect.disabled = false;
+            const selectedMedico = medicoServicios.find(medico => medico.medico_id == this.value);
+            if (selectedMedico && selectedMedico.servicios) {
+                selectedMedico.servicios.forEach(servicio => {
+                    const option = document.createElement('option');
+                    option.value = servicio.servicio_id;
+                    option.textContent = `${servicio.servicio_nombre} - ${servicio.servicio_descripcion} ($${parseFloat(servicio.servicio_costo).toFixed(2)})`;
+                    servicioSelect.appendChild(option);
+                });
+            }
+        } else {
+            servicioSelect.disabled = true;
+        }
+    });
+
+    function populateServices() {
+        servicioSelect.innerHTML = '<option value="">Selecciona un Servicio</option>';
+        const selectedMedicoId = medicoSelect.value;
+        if (selectedMedicoId) {
+            const selectedMedico = medicoServicios.find(medico => medico.medico_id == selectedMedicoId);
+        
+            if (selectedMedico && selectedMedico.servicios) {
+                selectedMedico.servicios.forEach(servicio => {
+                    const option = document.createElement('option');
+                    option.value = servicio.servicio_id;
+                    option.textContent = `${servicio.servicio_nombre} - ${servicio.servicio_descripcion} ($${parseFloat(servicio.servicio_costo).toFixed(2)})`;
+                    servicioSelect.appendChild(option);
+                });
+            }
+        }
+    }
+
+    document.getElementById('medico').addEventListener('change', populateServices);
+    const modalCalendario = document.getElementById("myModal");
+    const closeModalCalendarioBtn = document.getElementsByClassName("close-calentario")[0];
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        if (medicoSelect.value && servicioSelect.value) {
+            document.getElementById('doctor-service-selection').style.display = 'none';
+            document.getElementById('calendario').style.display = 'block';
+        } else {
+            Swal.fire({
+                icon:"error",
+                title:"Error!",
+                text:"Eliga un medico y un servicio primero para continuar",
+                footer: '<a href="https://youtu.be/UZKuju7vIbM?si=6PpR1o_qlxsoOcWy" target="_blank">¿Porque tengo este error?</a>' //:P
+            });
+        }
+    });
+
+    function openModalCalendario(date) {
+        fecha = date;
+        const currentDate = new Date(date);
+
+        // Formatear la fecha en el formato deseado (por ejemplo, DD/MM/YYYY)
+        const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${
+            (currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
+            
+        // Mostrar la fecha formateada en el modal
+        document.getElementById('current-date-modal').innerText = formattedDate;
+        modalCalendario.classList.add('active');
+    }
+
+    function closeModalCalentario() {
+        modalCalendario.classList.remove('active');
+    }
+
+    function saveModalCalentar(){
+        Swal.fire({
+        title: "¿Deseas guardar tu cita?",
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        denyButtonText: `No`
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                fetchSaveCita();
+            } 
+        });
+    }
+
+    // function sendWhatsapp (phone, fecha, hora) {
+    //     // Crear mensaje con formato
+    //     const message = `
+    //     Buenos días, doctor. Me gustaría agendar una consulta médica para el día ${fecha} a las ${hora}. ¿Le parece conveniente esa hora?`.trim();
+
+    //     // Limpiar y formatear el número de teléfono
+    //     const cleanPhone = phone.replace(/\D/g, '');
+
+    //     // Crear la URL de WhatsApp
+    //     const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+
+    //     // Abrir en una nueva ventana
+    //     window.open(whatsappUrl, '_blank');
+    // }
+
+    async function fetchSaveCita(){
+        if(hora.trim().length === 0){
+            Swal.fire({
+                title: "The Internet?",
+                text: "That thing is still around?",
+                icon: "warning"
+            });
+            return;
+        }
+
+        const lastDate = new Date(fecha);
+
+        // Dividir `hora` en horas, minutos y segundos (asumiendo que `hora` tiene formato "HH:mm" o "HH:mm:ss")
+        const [hours, minutes, seconds = 0] = hora.split(":").map(Number);
+
+        // Crear `dataTime` usando los valores específicos
+        const dataTime = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate(), hours, minutes, seconds);
+
+        // Obtener los valores de `dataTime`
+        const year = dataTime.getFullYear();
+        const month = dataTime.getMonth() + 1; // Sumar 1 porque `getMonth()` devuelve un valor de 0 a 11
+        const date = dataTime.getDate();
+        const formattedHours = String(dataTime.getHours()).padStart(2, '0'); // Formato de dos dígitos
+        const formattedMinutes = String(dataTime.getMinutes()).padStart(2, '0');
+        const formattedSeconds = String(dataTime.getSeconds()).padStart(2, '0');
+
+        const registrarfecha = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
+        const registrarhora = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+
+        // Construir el objeto `data`
+        const data = {                
+            "medico_id": medicoSelect.value,
+            "servicio_id": servicioSelect.value,
+            "fecha": registrarfecha, // Formato AAAA-MM-DD
+            "hora": registrarhora, // Formato HH:mm:ss
+        };
+        try{
+            const response = await fetch('/dashboard_paciente/solicitar_consulta', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+                });
+
+                closeModalCalentario();
+
+                if (!response.ok){
+                    console.log(response)
+                    throw new Exception("se genero un problema");
+                }
+
+                Swal.fire({
+                title: "Su cita ha sido registrada",
+                text: "Redirigiendo al inicio",
+                icon: "success"
+            }).then(()=>{
+                window.location.href = '/dashboard_paciente';
+            });
+        }catch(error){
+            Swal.fire({
+                title: "The Internet?",
+                text: "ya consulta ya existe",
+                icon: "warning"
+            });
+        }finally{
+            hora = fecha = "";
+            // Obtén todos los botones en la cuadrícula de fechas
+        const buttons = document.querySelectorAll('.date-item');
+            
+        // Remueve la clase 'active' de todos los botones
+        buttons.forEach(button => button.classList.remove('active'));
+        }
+    }
+
+    function selectModalTimeGrid(event) {
+        // Obtén todos los botones en la cuadrícula de fechas
+        const buttons = document.querySelectorAll('.date-item');
+            
+        // Remueve la clase 'active' de todos los botones
+        buttons.forEach(button => button.classList.remove('active'));
+            
+        // Añade la clase 'active' al botón que fue clicado
+        const selectedButton = event.target;
+        selectedButton.classList.add('active');
+
+        // Obtén el ID y el valor (texto) del botón seleccionado
+        const buttonId = selectedButton.id;
+        const buttonValue = selectedButton.textContent;
+
+        hora = buttonValue;
+
+        // Muestra el ID y el valor en la consola (o úsalo como necesites)
+        console.log("ID del botón seleccionado:", buttonId);
+        console.log("Valor del botón seleccionado:", buttonValue);
+    }
+        
+    // Asocia la función al evento de clic de cada botón
+    document.querySelectorAll('.date-item').forEach(button => {
+        button.addEventListener('click', selectModalTimeGrid);
+    });
+
+    // Cerrar el modal cuando se hace clic en la X
+    closeModalCalendarioBtn.onclick = closeModalCalentario;
+
+    // Cerrar el modal cuando se hace clic fuera de él
+    window.onclick = function(event) {
+        if (event.target == modalCalendario) {
+            closeModalCalentario();
+        }
+    }
+
+    // Cerrar el modal con la tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModalCalentario();
+        }
+    });
+</script>
+<%- include('../_partials/footer_pac') %>

@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-image: linear-gradient(
+      to right,
+      #353a7f,
+      rgba(40, 88, 167, 0.7)
+    ),
+    url('/imgs/header.png');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.header-text {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px; /* Reduced from 36px */
+    font-weight: bold;
+    color: white;
+    z-index: 1000;
+}
+
+.header-text h1 {
+    margin: 0;
+}
+
+.header-text .highlight {
+    color: orange;
+}
+
+.container {
+    max-width: 480px; /* Reduced from 1200px */
+    width: 90%;
+    background: #fff;
+    padding: 40px; /* Reduced from 60px */
+    border-radius: 12px; /* Reduced from 16px */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-content {
+    width: 100%;
+    max-width: 400px; /* Reduced from 600px */
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 28px; /* Reduced from 48px */
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px; /* Reduced from 40px */
+    color: #333;
+}
+
+.icon-container {
+    text-align: center;
+    margin-bottom: 30px; /* Reduced from 40px */
+}
+
+.lock-icon {
+    width: 80px; /* Reduced from 120px */
+    height: 80px; /* Reduced from 120px */
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px; /* Reduced from 30px */
+    width: 100%;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 15px; /* Adjusted padding */
+    border: 1px solid #ddd; /* Reduced border width */
+    border-radius: 6px; /* Reduced from 8px */
+    font-size: 16px; /* Reduced from 18px */
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    font-size: 18px; /* Reduced from 24px */
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px; /* Reduced from 20px */
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px; /* Reduced from 8px */
+    font-size: 16px; /* Reduced from 20px */
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.submit-btn:hover {
+    background-color: #2980b9;
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px; /* Reduced from 30px */
+}
+
+.login-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 14px; /* Reduced from 18px */
+    transition: color 0.3s;
+}
+
+.login-link a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    text-align: center;
+    display: block;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 30px;
+        width: 95%;
+    }
+    
+    .title {
+        font-size: 24px;
+    }
+    
+    .lock-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .input-group input, 
+    .submit-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .login-link a {
+        font-size: 14px;
+    }
+}

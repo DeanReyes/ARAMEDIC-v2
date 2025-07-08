@@ -1,0 +1,196 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+ 
+    background-image:
+    linear-gradient(
+      to right,
+      #fafafc8f,
+      rgba(255, 255, 255, 0.521)
+    ),url("/imgs/fondo.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    height: 5vh; /* Ocupa toda la ventana */
+    margin: 50; /* Eliminar cualquier margen adicional */
+    background-color: #f5f8fa;
+    color: #333;
+    /*font-family: 'Arial', sans-serif;
+    background-color: #f5f8fa;
+    color: #333;*/
+}
+
+
+.header { /*Bienvenido a Aramedic*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f7f7f7;
+    padding: 20px;
+    color: rgb(15, 102, 173);
+    border-radius: 20px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle más profundidad */
+    /*border: 2px solid #007bff; /* Borde de color azul */
+    font-weight: bold; /* Hacer el texto más grueso */
+    font-family: 'Georgia', sans-serif; /* Cambiar tipo de fuente */
+}
+
+.header .logo h2 {
+    font-weight: normal;
+}
+
+.header .user-info p {
+    margin: 0;
+    font-size: 18px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 { /* Color de : Listado de Historias Clínicas*/
+    margin-bottom: 20px;
+    color: #2c73df;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.search-bar input {
+    width: 70%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-bar button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px; /* Reducido el tamaño de la fuente */
+    min-width: 1000px;
+    background-color: white;
+}
+
+.styled-table thead tr {
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    /*font-size: 15px;  Para un ajuste en las cabeceras */
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 10px 12px; /* Ajustar el padding si es necesario - padding: 12px 15px */
+    border: 1px solid #ddd;
+    font-size: 14px; /* Ajuste adicional si solo quieres reducir el tamaño dentro de las celdas */
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #ddd;
+    font-size: 14px; /* Para un ajuste en las celdas del cuerpo */
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #007bff;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Para la columna del teléfono */
+.styled-table td {
+    white-space: nowrap; /* Evita que el contenido se ajuste en varias líneas */
+}
+
+.styled-table td.telefono {
+    text-align: center; /* Centra el texto en la celda de teléfono si es necesario */
+    white-space: nowrap; /* Asegura que el teléfono se mantenga en una sola línea */
+}
+
+
+.view-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.edit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* Contenedor de las acciones (botones) */
+.action-buttons {
+    display: flex; /* Usamos flexbox para alinear los botones horizontalmente */
+    justify-content: center; /* Centra los botones horizontalmente */
+    gap: 10px; /* Espacio entre los botones */
+}
+
+/* Estilo para los botones */
+button {
+    padding: 6px 10px;
+    font-size: 13px; /* Tamaño del texto */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block; /* Aseguramos que los botones se muestren en línea */
+}
+
+button.ver {
+    background-color: #1220e2; /* Color para el botón Ver */
+    color: white;
+}
+
+button.editar {
+    background-color: #2ecc71; /* Color para el botón Editar */
+    color: white;
+}
+
+button.eliminar {
+    background-color: #e74c3c; /* Color para el botón Eliminar */
+    color: white;
+}
