@@ -1,4 +1,3 @@
-# Equipo Frontend
 ## Instalaciones
 
 ### Git
@@ -21,7 +20,7 @@ git clone https://github.com/ARAMEDIC-Developers/aramedic-frontend.git
 ### Instalación de XAMPP
 ### Instalar npm install
 ### Instalar npm install express
-### Importar aramedic.sql como base de datos
+### Importar clinica.sql como base de datos
 
 ### Correr programa: npm run dev
 
